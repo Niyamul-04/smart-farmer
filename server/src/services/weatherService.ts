@@ -318,13 +318,13 @@ export async function fetchWeatherData(
     if (next3DaysRainProb >= 50) {
       farmerHeadline = "আগামী কয়েকদিনে বৃষ্টির সম্ভাবনা রয়েছে। মাঠের শস্য সংরক্ষণে সতর্ক থাকুন।";
       farmerDetails.push("পরবর্তী ৪৮ ঘণ্টায় বৃষ্টির সম্ভাবনা রয়েছে। বাইরে শুকাতে দেওয়া ফসল অবিলম্বে নিরাপদ স্থানে রাখুন।");
-      farmerDetails.push("বৃষ্টির পূর্বে ফসলে রাসায়নিক সার ও কীটনাশক স্প্রে করা থেকে বিরত থাকুন, অন্যথায় তা বৃষ্টির পানিতে ধুয়ে নষ্ট হবে।");
+      farmerDetails.push("বৃষ্টির পূর্বে জমিতে রাসায়নিক সার প্রয়োগ করা থেকে বিরত থাকুন, অন্যথায় তা বৃষ্টির পানিতে ধুয়ে নষ্ট হবে।");
       farmerDetails.push("সবজি ও আলুর জমিতে যাতে বৃষ্টির পানি জমে না থাকে সে জন্য দ্রুত নিকাশ নালা পরিষ্কার রাখুন।");
     } else {
       farmerHeadline = "আগামী ৩ দিন রৌদ্রোজ্জ্বল ও শুষ্ক আবহাওয়া বিরাজ করবে। সেচ ও পরিচর্যা চালিয়ে যান।";
       farmerDetails.push("আবহাওয়া শুষ্ক থাকায় ধান ও ফসলে প্রয়োজনমাফিক পরিমিত সেচ প্রয়োগ করুন।");
       farmerDetails.push("পাকা ফসল কর্তন, মাড়াই ও রোদে শুকানোর জন্য আগামী কয়েকদিন অত্যন্ত চমৎকার সময়।");
-      farmerDetails.push("পোকা বা রোগবালাই দমনের জন্য প্রয়োজনীয় অনুমোদিত স্প্রে করার অনুকূল সময়।");
+      farmerDetails.push("মাঠ পরিচর্যা, নিড়ানি দেওয়া ও আগাছা পরিষ্কারের জন্য অনুকূল সময়।");
     }
 
     if (next3DaysMaxTemp >= 35) {
@@ -477,7 +477,7 @@ function generateFallbackWeatherData(
     periodsToday: [
       { periodNameBn: "সকাল", periodNameEn: "Morning", timeRange: "০৬:০০ - ১২:০০", avgTemp: 26, rainProb: 10, conditionBn: "রৌদ্রোজ্জ্বল", conditionEn: "Sunny", icon: "sun", farmerAdviceBn: "সকালের রোদ শস্য পরিচর্যার জন্য উত্তম।" },
       { periodNameBn: "দুপুর", periodNameEn: "Noon", timeRange: "১২:০০ - ১৬:০০", avgTemp: 32, rainProb: 15, conditionBn: "উষ্ণ ও রোদ", conditionEn: "Warm Sun", icon: "sun", farmerAdviceBn: "কড়া রোদে জমিতে কাজ সাবধানে করুন।" },
-      { periodNameBn: "বিকাল", periodNameEn: "Afternoon", timeRange: "১৬:০০ - ১৯:০০", avgTemp: 29, rainProb: 15, conditionBn: "মনোরম", conditionEn: "Pleasant", icon: "cloud-sun", farmerAdviceBn: "সার ও বালাইনাশক স্প্রে করার জন্য ভালো সময়।" },
+      { periodNameBn: "বিকাল", periodNameEn: "Afternoon", timeRange: "১৬:০০ - ১৯:০০", avgTemp: 29, rainProb: 15, conditionBn: "মনোরম", conditionEn: "Pleasant", icon: "cloud-sun", farmerAdviceBn: "মাঠ পরিদর্শন ও স্বাভাবিক ফসল পরিচর্যার জন্য ভালো সময়।" },
       { periodNameBn: "রাত", periodNameEn: "Night", timeRange: "১৯:০০ - ০৬:০০", avgTemp: 24, rainProb: 10, conditionBn: "পরিস্কার", conditionEn: "Clear", icon: "moon", farmerAdviceBn: "রাতের তাপমাত্রা স্বাভাবিক থাকবে।" }
     ],
     hourly24h,

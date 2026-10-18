@@ -314,7 +314,7 @@ export const ProfitCalculator: React.FC<ProfitCalculatorProps> = ({ initialCropI
                 </div>
 
                 <div>
-                  <label className="block text-slate-600 mb-1">{language === "bn" ? "৩. কীটনাশক ও বালাই ব্যবস্থাপনা:" : "3. Pesticides:"}</label>
+                  <label className="block text-slate-600 mb-1">{language === "bn" ? "৩. ফসল সুরক্ষা ও পরিচর্যা খরচ:" : "3. Crop Protection & Care:"}</label>
                   <input
                     type="number"
                     value={pesticideCost}
