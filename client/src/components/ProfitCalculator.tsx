@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useLanguage } from "../context/LanguageContext";
 import { useLocation } from "../context/LocationContext";
 import { CalculationResult, LandUnit, CropData } from "../types";
@@ -13,7 +13,9 @@ import {
   CheckCircle2,
   AlertTriangle,
   Scale,
-  Sparkles
+  Sparkles,
+  RotateCcw,
+  Edit3
 } from "lucide-react";
 
 interface ProfitCalculatorProps {
@@ -28,6 +30,9 @@ export const ProfitCalculator: React.FC<ProfitCalculatorProps> = ({ initialCropI
   const [selectedCropId, setSelectedCropId] = useState<string>(initialCropId || "boro_rice");
   const [landArea, setLandArea] = useState<number>(33); // default 1 bigha
   const [landUnit, setLandUnit] = useState<LandUnit>("decimal");
+
+  // Track if user is in manual custom mode
+  const [isManualCustom, setIsManualCustom] = useState<boolean>(false);
 
   // Editable Expense Inputs
   const [seedCost, setSeedCost] = useState<number>(0);
@@ -51,6 +56,80 @@ export const ProfitCalculator: React.FC<ProfitCalculatorProps> = ({ initialCropI
   const [comparisonResults, setComparisonResults] = useState<CalculationResult[]>([]);
   const [compareCropsSelection, setCompareCropsSelection] = useState<string[]>(["boro_rice", "potato", "maize"]);
 
+  // Calculate live financial metrics instantly in real-time
+  const calculateFinancials = (
+    cId: string,
+    area: number,
+    unit: LandUnit,
+    sCost: number,
+    fCost: number,
+    pCost: number,
+    lCost: number,
+    iCost: number,
+    lpCost: number,
+    tCost: number,
+    yieldKg: number,
+    pricePerKg: number
+  ): CalculationResult => {
+    const crop = crops.find(c => c.id === cId);
+    let decimals = area;
+    if (unit === "bigha") decimals = area * 33;
+    if (unit === "acre") decimals = area * 100;
+    decimals = Math.max(0.1, decimals);
+    const bighas = decimals / 33;
+    const acres = decimals / 100;
+
+    const totalCost = (sCost || 0) + (fCost || 0) + (pCost || 0) + (lCost || 0) + (iCost || 0) + (lpCost || 0) + (tCost || 0);
+    const grossRev = Math.round((yieldKg || 0) * (pricePerKg || 0));
+    const profit = grossRev - totalCost;
+
+    const costPerDec = Math.round(totalCost / decimals);
+    const costPerBigha = Math.round(totalCost / bighas);
+    const profitPerDec = Math.round(profit / decimals);
+    const profitPerBigha = Math.round(profit / bighas);
+
+    const breakEvenPerKg = yieldKg > 0 ? parseFloat((totalCost / yieldKg).toFixed(2)) : 0;
+    const breakEvenPerMaund = parseFloat((breakEvenPerKg * 40).toFixed(1));
+    const roi = totalCost > 0 ? parseFloat(((profit / totalCost) * 100).toFixed(1)) : 0;
+
+    return {
+      cropId: cId,
+      cropName: crop?.name || "Selected Crop",
+      cropBnName: crop?.bnName || "নির্বাচিত ফসল",
+      landAreaInput: area,
+      landUnit: unit,
+      normalizedAreaDecimal: decimals,
+      areaInBigha: parseFloat(bighas.toFixed(2)),
+      areaInAcre: parseFloat(acres.toFixed(2)),
+      expenses: {
+        seedCost: sCost || 0,
+        fertilizerCost: fCost || 0,
+        pesticideCost: pCost || 0,
+        laborCost: lCost || 0,
+        irrigationCost: iCost || 0,
+        landPrepCost: lpCost || 0,
+        transportOtherCost: tCost || 0
+      },
+      totalProductionCost: totalCost,
+      costPerDecimal: costPerDec,
+      costPerBigha: costPerBigha,
+      expectedYieldKg: yieldKg || 0,
+      expectedYieldMaund: parseFloat(((yieldKg || 0) / 40).toFixed(1)),
+      expectedSellingPricePerKg: pricePerKg || 0,
+      expectedSellingPricePerMaund: Math.round((pricePerKg || 0) * 40),
+      grossRevenue: grossRev,
+      netProfit: profit,
+      profitPerDecimal: profitPerDec,
+      profitPerBigha: profitPerBigha,
+      breakEvenPricePerKg: breakEvenPerKg,
+      breakEvenPricePerMaund: breakEvenPerMaund,
+      roiPercentage: roi,
+      isProfitable: profit >= 0,
+      benchmarkSource: crop?.sourceAuthority || "কৃষি গবেষণা প্রতিষ্ঠান ও বাজার দর",
+      disclaimerBn: "প্রদত্ত হিসাব আপনার নিজস্ব বাস্তব ইনপুট অনুযায়ী সরাসরি গণনাকৃত। স্থানীয় বাজারদর ও আবহাওয়া পরিস্থিতি বিবেচনায় রাখুন।"
+    };
+  };
+
   // Fetch Crops on Mount
   useEffect(() => {
     async function loadCrops() {
@@ -69,7 +148,7 @@ export const ProfitCalculator: React.FC<ProfitCalculatorProps> = ({ initialCropI
     loadCrops();
   }, [initialCropId]);
 
-  // When crop or area/unit changes, populate default benchmarks
+  // Apply Benchmark Values helper
   const applyBenchmarkValues = (crop: CropData, area: number, unit: LandUnit) => {
     let decimals = area;
     if (unit === "bigha") decimals = area * 33;
@@ -77,16 +156,30 @@ export const ProfitCalculator: React.FC<ProfitCalculatorProps> = ({ initialCropI
     decimals = Math.max(0.1, decimals);
 
     const b = crop.benchmarkCost;
-    setSeedCost(Math.round(b.seedCostPerDecimal * decimals));
-    setFertilizerCost(Math.round(b.fertilizerCostPerDecimal * decimals));
-    setPesticideCost(Math.round(b.pesticideCostPerDecimal * decimals));
-    setLaborCost(Math.round(b.laborCostPerDecimal * decimals));
-    setIrrigationCost(Math.round(b.irrigationCostPerDecimal * decimals));
-    setLandPrepCost(Math.round(b.landPrepCostPerDecimal * decimals));
-    setTransportCost(Math.round(b.transportOtherCostPerDecimal * decimals));
+    const s = Math.round(b.seedCostPerDecimal * decimals);
+    const f = Math.round(b.fertilizerCostPerDecimal * decimals);
+    const p = Math.round(b.pesticideCostPerDecimal * decimals);
+    const l = Math.round(b.laborCostPerDecimal * decimals);
+    const i = Math.round(b.irrigationCostPerDecimal * decimals);
+    const lp = Math.round(b.landPrepCostPerDecimal * decimals);
+    const t = Math.round(b.transportOtherCostPerDecimal * decimals);
+    const yKg = Math.round(b.avgExpectedYieldPerDecimalKg * decimals);
+    const price = b.avgSellingPricePerKg;
 
-    setExpectedYieldKg(Math.round(b.avgExpectedYieldPerDecimalKg * decimals));
-    setSellingPricePerKg(b.avgSellingPricePerKg);
+    setSeedCost(s);
+    setFertilizerCost(f);
+    setPesticideCost(p);
+    setLaborCost(l);
+    setIrrigationCost(i);
+    setLandPrepCost(lp);
+    setTransportCost(t);
+    setExpectedYieldKg(yKg);
+    setSellingPricePerKg(price);
+    setIsManualCustom(false);
+
+    // Immediately calculate and set result
+    const calc = calculateFinancials(crop.id, area, unit, s, f, p, l, i, lp, t, yKg, price);
+    setResult(calc);
   };
 
   const handleCropChange = (cropId: string) => {
@@ -114,9 +207,69 @@ export const ProfitCalculator: React.FC<ProfitCalculatorProps> = ({ initialCropI
     }
   };
 
-  // Perform Calculation Request
+  const handleResetToBenchmark = () => {
+    const crop = crops.find(c => c.id === selectedCropId);
+    if (crop) {
+      applyBenchmarkValues(crop, landArea, landUnit);
+    }
+  };
+
+  // Real-time live update for manual inputs
+  const updateManualField = (
+    field: string,
+    value: number
+  ) => {
+    setIsManualCustom(true);
+    let s = seedCost;
+    let f = fertilizerCost;
+    let p = pesticideCost;
+    let l = laborCost;
+    let i = irrigationCost;
+    let lp = landPrepCost;
+    let t = transportCost;
+    let y = expectedYieldKg;
+    let pr = sellingPricePerKg;
+
+    if (field === "seedCost") { setSeedCost(value); s = value; }
+    else if (field === "fertilizerCost") { setFertilizerCost(value); f = value; }
+    else if (field === "pesticideCost") { setPesticideCost(value); p = value; }
+    else if (field === "laborCost") { setLaborCost(value); l = value; }
+    else if (field === "irrigationCost") { setIrrigationCost(value); i = value; }
+    else if (field === "landPrepCost") { setLandPrepCost(value); lp = value; }
+    else if (field === "transportCost") { setTransportCost(value); t = value; }
+    else if (field === "expectedYieldKg") { setExpectedYieldKg(value); y = value; }
+    else if (field === "sellingPricePerKg") { setSellingPricePerKg(value); pr = value; }
+
+    const updatedResult = calculateFinancials(
+      selectedCropId,
+      landArea,
+      landUnit,
+      s, f, p, l, i, lp, t, y, pr
+    );
+    setResult(updatedResult);
+  };
+
+  // Manual Trigger Button (also syncs with server)
   const runCalculation = async () => {
     setIsCalculating(true);
+    // Instant local calculation first so user never waits
+    const localCalc = calculateFinancials(
+      selectedCropId,
+      landArea,
+      landUnit,
+      seedCost,
+      fertilizerCost,
+      pesticideCost,
+      laborCost,
+      irrigationCost,
+      landPrepCost,
+      transportCost,
+      expectedYieldKg,
+      sellingPricePerKg
+    );
+    setResult(localCalc);
+
+    // Also attempt server sync
     try {
       const payload = {
         districtId: selectedDistrict?.id || "dhaka",
@@ -142,22 +295,15 @@ export const ProfitCalculator: React.FC<ProfitCalculatorProps> = ({ initialCropI
         body: JSON.stringify(payload)
       });
       const data = await res.json();
-      if (data.success) {
+      if (data.success && data.calculation) {
         setResult(data.calculation);
       }
     } catch (err) {
-      console.error("Calculation failed:", err);
+      console.warn("Server calculation call failed, using instant local calculations:", err);
     } finally {
       setIsCalculating(false);
     }
   };
-
-  // Initial calculation trigger when inputs load
-  useEffect(() => {
-    if (expectedYieldKg > 0 && sellingPricePerKg > 0) {
-      runCalculation();
-    }
-  }, [expectedYieldKg, sellingPricePerKg]);
 
   // Run multi-crop comparison
   const runComparison = async () => {
@@ -188,6 +334,11 @@ export const ProfitCalculator: React.FC<ProfitCalculatorProps> = ({ initialCropI
     }
   }, [compareMode, compareCropsSelection, landArea, landUnit]);
 
+  // Live sum of total costs for the expense header
+  const liveTotalExpenses = useMemo(() => {
+    return (seedCost || 0) + (fertilizerCost || 0) + (pesticideCost || 0) + (laborCost || 0) + (irrigationCost || 0) + (landPrepCost || 0) + (transportCost || 0);
+  }, [seedCost, fertilizerCost, pesticideCost, laborCost, irrigationCost, landPrepCost, transportCost]);
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-6 space-y-6">
       {/* Header */}
@@ -202,8 +353,8 @@ export const ProfitCalculator: React.FC<ProfitCalculatorProps> = ({ initialCropI
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
             {language === "bn"
-              ? "স্বচ্ছ গাণিতিক সূত্র ও স্থানীয় কৃষি গবেষণা উপাত্তের ভিত্তিতে তৈরি। সকল মান সম্পাদনাযোগ্য।"
-              : "Transparent formulas with editable costs, yields, and local benchmarks."}
+              ? "স্বচ্ছ গাণিতিক সূত্র ও আপনার নিজস্ব বাস্তব খরচের ভিত্তিতে লাইভ হিসাব। যেকোনো সংখ্যা পরিবর্তন করলেই সাথে সাথে আপডেট হবে।"
+              : "Instant live recalculation as you type. All cost and yield parameters are fully editable."}
           </p>
         </div>
 
@@ -233,10 +384,24 @@ export const ProfitCalculator: React.FC<ProfitCalculatorProps> = ({ initialCropI
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Inputs Section (7 Cols) */}
           <div className="lg:col-span-7 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-5">
-            <h2 className="text-base font-bold text-slate-900 border-b border-slate-100 pb-3 flex items-center gap-2">
-              <span className="text-emerald-600">📝</span>
-              <span>{language === "bn" ? "জমি ও ফসলের তথ্য প্রদান করুন" : "Enter Land & Crop Inputs"}</span>
-            </h2>
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                <span className="text-emerald-600">📝</span>
+                <span>{language === "bn" ? "জমি ও ফসলের তথ্য প্রদান করুন" : "Enter Land & Crop Inputs"}</span>
+              </h2>
+
+              {isManualCustom ? (
+                <span className="inline-flex items-center gap-1 text-[11px] font-bold bg-amber-50 text-amber-800 border border-amber-200 px-2.5 py-1 rounded-full animate-in fade-in">
+                  <Edit3 className="w-3 h-3 text-amber-600" />
+                  <span>{language === "bn" ? "কাস্টম ম্যানুয়াল হিসাব চলছে" : "Custom Inputs Active"}</span>
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-1 text-[11px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 px-2.5 py-1 rounded-full">
+                  <Sparkles className="w-3 h-3 text-emerald-600" />
+                  <span>{language === "bn" ? "সরকারি গড় বেঞ্চমার্ক" : "Standard Benchmark"}</span>
+                </span>
+              )}
+            </div>
 
             {/* Candidate Crop & Land Area Selection */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -266,9 +431,9 @@ export const ProfitCalculator: React.FC<ProfitCalculatorProps> = ({ initialCropI
                     type="number"
                     min="0.1"
                     step="1"
-                    value={landArea}
-                    onChange={e => handleAreaChange(parseFloat(e.target.value) || 1)}
-                    className="w-1/2 p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                    value={landArea || ""}
+                    onChange={e => handleAreaChange(parseFloat(e.target.value) || 0)}
+                    className="w-1/2 p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold focus:ring-2 focus:ring-emerald-500 focus:outline-none tabular-nums"
                   />
                   <select
                     value={landUnit}
@@ -286,80 +451,91 @@ export const ProfitCalculator: React.FC<ProfitCalculatorProps> = ({ initialCropI
             {/* Editable Expenses Breakdown */}
             <div className="space-y-3 pt-2">
               <div className="flex items-center justify-between text-xs font-bold text-slate-800 border-b border-slate-100 pb-2">
-                <span>{language === "bn" ? "উৎপাদন খরচের বিস্তারিত (টাকায়)" : "Production Expenses (BDT)"}</span>
-                <span className="text-[11px] font-normal text-emerald-700">
-                  {language === "bn" ? "যেকোনো খরচ এডিট করতে পারেন" : "Editable"}
-                </span>
+                <div className="flex items-center gap-2">
+                  <span>{language === "bn" ? "উৎপাদন খরচের খাতসমূহ (টাকায়):" : "Production Expenses (BDT):"}</span>
+                  <span className="text-emerald-700 font-extrabold bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
+                    মোট: ৳ {toBengaliNumber(liveTotalExpenses.toLocaleString())}
+                  </span>
+                </div>
+                {isManualCustom && (
+                  <button
+                    onClick={handleResetToBenchmark}
+                    className="text-[11px] font-semibold text-emerald-700 hover:text-emerald-900 flex items-center gap-1 transition-colors underline"
+                  >
+                    <RotateCcw className="w-3 h-3" />
+                    <span>{language === "bn" ? "গড় মানে রিসেট" : "Reset Default"}</span>
+                  </button>
+                )}
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                 <div>
-                  <label className="block text-slate-600 mb-1">{language === "bn" ? "১. বীজ / চারা ক্রয়:" : "1. Seeds / Seedlings:"}</label>
+                  <label className="block text-slate-600 mb-1 font-medium">{language === "bn" ? "১. বীজ / চারা ক্রয়:" : "1. Seeds / Seedlings:"}</label>
                   <input
                     type="number"
-                    value={seedCost}
-                    onChange={e => setSeedCost(parseFloat(e.target.value) || 0)}
-                    className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg font-semibold"
+                    value={seedCost === 0 && !isManualCustom ? 0 : (seedCost || "")}
+                    onChange={e => updateManualField("seedCost", parseFloat(e.target.value) || 0)}
+                    className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500 tabular-nums"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-slate-600 mb-1">{language === "bn" ? "২. রাসায়নিক ও জৈব সার:" : "2. Fertilizers:"}</label>
+                  <label className="block text-slate-600 mb-1 font-medium">{language === "bn" ? "২. রাসায়নিক ও জৈব সার:" : "2. Fertilizers:"}</label>
                   <input
                     type="number"
-                    value={fertilizerCost}
-                    onChange={e => setFertilizerCost(parseFloat(e.target.value) || 0)}
-                    className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg font-semibold"
+                    value={fertilizerCost === 0 && !isManualCustom ? 0 : (fertilizerCost || "")}
+                    onChange={e => updateManualField("fertilizerCost", parseFloat(e.target.value) || 0)}
+                    className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500 tabular-nums"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-slate-600 mb-1">{language === "bn" ? "৩. ফসল সুরক্ষা ও পরিচর্যা খরচ:" : "3. Crop Protection & Care:"}</label>
+                  <label className="block text-slate-600 mb-1 font-medium">{language === "bn" ? "৩. ফসল সুরক্ষা ও পরিচর্যা খরচ:" : "3. Crop Protection & Care:"}</label>
                   <input
                     type="number"
-                    value={pesticideCost}
-                    onChange={e => setPesticideCost(parseFloat(e.target.value) || 0)}
-                    className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg font-semibold"
+                    value={pesticideCost === 0 && !isManualCustom ? 0 : (pesticideCost || "")}
+                    onChange={e => updateManualField("pesticideCost", parseFloat(e.target.value) || 0)}
+                    className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500 tabular-nums"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-slate-600 mb-1">{language === "bn" ? "৪. শ্রমিক মজুরি (রোপণ ও নিড়ানি):" : "4. Labor Costs:"}</label>
+                  <label className="block text-slate-600 mb-1 font-medium">{language === "bn" ? "৪. শ্রমিক মজুরি (রোপণ ও নিড়ানি):" : "4. Labor Costs:"}</label>
                   <input
                     type="number"
-                    value={laborCost}
-                    onChange={e => setLaborCost(parseFloat(e.target.value) || 0)}
-                    className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg font-semibold"
+                    value={laborCost === 0 && !isManualCustom ? 0 : (laborCost || "")}
+                    onChange={e => updateManualField("laborCost", parseFloat(e.target.value) || 0)}
+                    className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500 tabular-nums"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-slate-600 mb-1">{language === "bn" ? "৫. সেচ ও পাম্প জ্বালানি:" : "5. Irrigation:"}</label>
+                  <label className="block text-slate-600 mb-1 font-medium">{language === "bn" ? "৫. সেচ ও পাম্প জ্বালানি:" : "5. Irrigation:"}</label>
                   <input
                     type="number"
-                    value={irrigationCost}
-                    onChange={e => setIrrigationCost(parseFloat(e.target.value) || 0)}
-                    className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg font-semibold"
+                    value={irrigationCost === 0 && !isManualCustom ? 0 : (irrigationCost || "")}
+                    onChange={e => updateManualField("irrigationCost", parseFloat(e.target.value) || 0)}
+                    className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500 tabular-nums"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-slate-600 mb-1">{language === "bn" ? "৬. জমি চাষ ও ট্রাক্টর খরচ:" : "6. Land Prep / Tiller:"}</label>
+                  <label className="block text-slate-600 mb-1 font-medium">{language === "bn" ? "৬. জমি চাষ ও ট্রাক্টর খরচ:" : "6. Land Prep / Tiller:"}</label>
                   <input
                     type="number"
-                    value={landPrepCost}
-                    onChange={e => setLandPrepCost(parseFloat(e.target.value) || 0)}
-                    className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg font-semibold"
+                    value={landPrepCost === 0 && !isManualCustom ? 0 : (landPrepCost || "")}
+                    onChange={e => updateManualField("landPrepCost", parseFloat(e.target.value) || 0)}
+                    className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500 tabular-nums"
                   />
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label className="block text-slate-600 mb-1">{language === "bn" ? "৭. ফসল কাটা, পরিবহন ও আনুষঙ্গিক:" : "7. Harvest & Transport:"}</label>
+                  <label className="block text-slate-600 mb-1 font-medium">{language === "bn" ? "৭. ফসল কাটা, পরিবহন ও আনুষঙ্গিক:" : "7. Harvest & Transport:"}</label>
                   <input
                     type="number"
-                    value={transportCost}
-                    onChange={e => setTransportCost(parseFloat(e.target.value) || 0)}
-                    className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg font-semibold"
+                    value={transportCost === 0 && !isManualCustom ? 0 : (transportCost || "")}
+                    onChange={e => updateManualField("transportCost", parseFloat(e.target.value) || 0)}
+                    className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500 tabular-nums"
                   />
                 </div>
               </div>
@@ -374,12 +550,12 @@ export const ProfitCalculator: React.FC<ProfitCalculatorProps> = ({ initialCropI
                 <div className="relative">
                   <input
                     type="number"
-                    value={expectedYieldKg}
-                    onChange={e => setExpectedYieldKg(parseFloat(e.target.value) || 0)}
-                    className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500"
+                    value={expectedYieldKg || ""}
+                    onChange={e => updateManualField("expectedYieldKg", parseFloat(e.target.value) || 0)}
+                    className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500 tabular-nums"
                   />
                   <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 font-semibold">
-                    ≈ {toBengaliNumber((expectedYieldKg / 40).toFixed(1))} {language === "bn" ? "মণ" : "maund"}
+                    ≈ {toBengaliNumber(((expectedYieldKg || 0) / 40).toFixed(1))} {language === "bn" ? "মণ" : "maund"}
                   </span>
                 </div>
               </div>
@@ -391,12 +567,12 @@ export const ProfitCalculator: React.FC<ProfitCalculatorProps> = ({ initialCropI
                 <div className="relative">
                   <input
                     type="number"
-                    value={sellingPricePerKg}
-                    onChange={e => setSellingPricePerKg(parseFloat(e.target.value) || 0)}
-                    className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500"
+                    value={sellingPricePerKg || ""}
+                    onChange={e => updateManualField("sellingPricePerKg", parseFloat(e.target.value) || 0)}
+                    className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500 tabular-nums"
                   />
                   <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 font-semibold">
-                    ≈ {toBengaliNumber((sellingPricePerKg * 40).toFixed(0))} {language === "bn" ? "টাকা/মণ" : "BDT/maund"}
+                    ≈ {toBengaliNumber(((sellingPricePerKg || 0) * 40).toFixed(0))} {language === "bn" ? "টাকা/মণ" : "BDT/maund"}
                   </span>
                 </div>
               </div>
@@ -408,7 +584,7 @@ export const ProfitCalculator: React.FC<ProfitCalculatorProps> = ({ initialCropI
               className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-bold shadow-md transition-all flex items-center justify-center gap-2"
             >
               <RefreshCw className={`w-4 h-4 ${isCalculating ? "animate-spin" : ""}`} />
-              <span>{language === "bn" ? "হিসাব পুনরায় গণনা করুন" : "Recalculate Profit"}</span>
+              <span>{language === "bn" ? "হিসাব পুনরায় গণনা ও রিফ্রেশ করুন" : "Recalculate Profit"}</span>
             </button>
           </div>
 
@@ -558,35 +734,27 @@ export const ProfitCalculator: React.FC<ProfitCalculatorProps> = ({ initialCropI
                 <div className="space-y-2 text-xs">
                   <div className="flex justify-between">
                     <span className="text-slate-500">মোট খরচ:</span>
-                    <strong className="text-slate-800">৳ {toBengaliNumber(comp.totalProductionCost.toLocaleString())}</strong>
+                    <strong className="text-slate-800 tabular-nums">৳ {toBengaliNumber(comp.totalProductionCost.toLocaleString())}</strong>
                   </div>
-
                   <div className="flex justify-between">
-                    <span className="text-slate-500">মোট প্রত্যাশিত আয়:</span>
-                    <strong className="text-slate-800">৳ {toBengaliNumber(comp.grossRevenue.toLocaleString())}</strong>
+                    <span className="text-slate-500">প্রত্যাশিত আয়:</span>
+                    <strong className="text-slate-800 tabular-nums">৳ {toBengaliNumber(comp.grossRevenue.toLocaleString())}</strong>
                   </div>
-
-                  <div className="flex justify-between text-sm pt-2 border-t border-slate-200">
-                    <span className="font-bold text-slate-700">সম্ভাব্য নিট লাভ:</span>
-                    <strong className={comp.netProfit >= 0 ? "text-emerald-700 font-extrabold" : "text-red-600 font-extrabold"}>
+                  <div className="flex justify-between border-t border-slate-200 pt-2 font-bold">
+                    <span className="text-slate-700">সম্ভাব্য লাভ:</span>
+                    <span className={`tabular-nums ${comp.netProfit >= 0 ? "text-emerald-700" : "text-red-600"}`}>
                       ৳ {toBengaliNumber(comp.netProfit.toLocaleString())}
-                    </strong>
+                    </span>
                   </div>
+                  <div className="flex justify-between text-[11px]">
+                    <span className="text-slate-500">ব্রেক-ইভেন দর:</span>
+                    <span className="text-teal-700 font-medium tabular-nums">৳ {toBengaliNumber(comp.breakEvenPricePerKg)} / কেজি</span>
+                  </div>
+                </div>
 
-                  <div className="flex justify-between text-emerald-800 font-semibold">
-                    <span>বিঘা প্রতি লাভ:</span>
-                    <span>৳ {toBengaliNumber(comp.profitPerBigha.toLocaleString())}</span>
-                  </div>
-
-                  <div className="flex justify-between text-slate-600">
-                    <span>ব্রেক-ইভেন দর:</span>
-                    <span>৳ {toBengaliNumber(comp.breakEvenPricePerKg)} / কেজি</span>
-                  </div>
-
-                  <div className="flex justify-between text-slate-600">
-                    <span>বিনিয়োগের মুনাফা (ROI):</span>
-                    <span className="font-bold text-emerald-600">{toBengaliNumber(comp.roiPercentage)}%</span>
-                  </div>
+                <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px]">
+                  <span className="text-slate-500">বিঘা প্রতি লাভ:</span>
+                  <span className="font-extrabold text-emerald-700 tabular-nums">৳ {toBengaliNumber(comp.profitPerBigha.toLocaleString())}</span>
                 </div>
               </div>
             ))}
