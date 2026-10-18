@@ -1,6 +1,8 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 import { DIVISIONS, DISTRICTS, District, Upazila } from "./data/bangladeshLocations.js";
 import { CROPS_DATABASE, CropData } from "./data/cropDatabase.js";
 import { fetchWeatherData } from "./services/weatherService.js";
@@ -11,11 +13,18 @@ import { askNiyamulAI } from "./services/aiService.js";
 
 dotenv.config();
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
+
+// Serve static frontend build from client/dist if it exists
+const clientDistPath = path.resolve(__dirname, "../../client/dist");
+app.use(express.static(clientDistPath));
 
 // In-memory custom crop modifications for admin demo
 let dynamicCrops = [...CROPS_DATABASE];
@@ -340,6 +349,19 @@ app.get("/api/admin/stats", (_req: Request, res: Response) => {
   });
 });
 
+// SPA fallback: any unhandled non-API route returns the React client
+app.get("*", (req: Request, res: Response, next) => {
+  if (req.path.startsWith("/api")) {
+    return next();
+  }
+  res.sendFile(path.join(clientDistPath, "index.html"), (err) => {
+    if (err) {
+      next();
+    }
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`আবহাওয়া বন্ধু (Abhawa Bondhu) Server running on http://localhost:${PORT}`);
 });
+
