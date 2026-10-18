@@ -229,6 +229,7 @@ npm run build
 * **GitHub:** [@Niyamul-04](https://github.com/Niyamul-04)
 * **Email:** niyamulhasan301@gmail.com
 * **Repository:** [https://github.com/Niyamul-04/smart-farmer](https://github.com/Niyamul-04/smart-farmer)
+* live link : https://smart-farmer-1-98yj.onrender.com/
 
 ---
 
