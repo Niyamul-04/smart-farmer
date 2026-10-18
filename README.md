@@ -1,158 +1,236 @@
-# আবহাওয়া বন্ধু (Abhawa Bondhu) — Smart Bangladesh Weather & Agriculture Platform
+# 🌾 Abhawa Bondhu (আবহাওয়া বন্ধু) — Smart Bangladesh Weather & Agriculture Platform
 
-> **"কৃষক বাঁচলে বাঁচবে দেশ, স্মার্ট হবে বাংলাদেশ"**
-> 
-> একটি আধুনিক, সংবেদনশীল এবং পূর্ণাঙ্গ ওয়েব অ্যাপ্লিকেশন যা বাংলাদেশের সাধারণ মানুষ এবং কৃষক ভাইদের জন্য আবহাওয়ার রিয়েল-টাইম পূর্বাভাস, অঞ্চলভিত্তিক ফসলের উপযুক্ততা, চাষাবাদ পরিকল্পনা এবং অর্থনৈতিক লাভ-ক্ষতির স্বচ্ছ হিসাব প্রদান করে।
+[![React](https://img.shields.io/badge/React-18.3.1-61DAFB?style=flat-square&logo=react&logoColor=black)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-5.4-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Node.js](https://img.shields.io/badge/Node.js-22.x-339933?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Express](https://img.shields.io/badge/Express-4.19-000000?style=flat-square&logo=express&logoColor=white)](https://expressjs.com/)
+[![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-3.4-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![AI Powered](https://img.shields.io/badge/AI_Engine-Gemini_Pro_%2B_Local_Agro_Rules-FF6F00?style=flat-square&logo=google&logoColor=white)](https://ai.google.dev/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 
----
-
-## 🌟 প্রধান বৈশিষ্ট্যসমূহ (Key Features)
-
-### ১. ভাষা ও ব্যবহারকারী অভিজ্ঞতা (Language & Rural-Friendly UX)
-* **ডিফল্ট বাংলা ভাষা**: গ্রামীণ কৃষক ও সাধারণ মানুষের উপযোগী সহজ, সাবলীল ও স্পষ্ট বাংলা পরিভাষা।
-* **ইংরেজি সুইচ (English Switch)**: এক ক্লিকে সম্পূর্ণ প্ল্যাটফর্ম ইংরেজিতে রূপান্তরযোগ্য।
-* **মোবাইল-ফার্স্ট ডিজাইন (Mobile-First)**: যেকোনো অ্যান্ড্রয়েড স্মার্টফোনে দ্রুত লোড ও বড় টাচ টার্গেট।
-* **বাংলা সংখ্যা রূপান্তর**: তাপমাত্রা, বৃষ্টিপাত, টাকা ও শতকরার মান বাংলা সংখ্যায় প্রদর্শিত।
-* **কোনো নিবন্ধনের বাধ্যবাধকতা নেই**: আবহাওয়া ও ফসলের তথ্য সম্পূর্ণ উন্মুক্ত।
-
-### ২. রিয়েল-টাইম আবহাওয়া ও ৭ দিনের পূর্বাভাস (Real-Time Weather)
-* **ওপেন-মেটিও (Open-Meteo) ইন্টিগ্রেশন**: ইসিএমডব্লিউএফ (ECMWF) ও জিএফএস (GFS) বৈশ্বিক মডেল থেকে লাইভ ডেটা।
-* **বর্তমান তাপমাত্রা ও অনুভূত তাপমাত্রা (Feels like)**।
-* **আজকের দিনলিপি (Day Timeline)**: সকাল (০৬:০০-১২:০০), দুপুর (১২:০০-১৬:০০), বিকাল (১৬:০০-১৯:০০) ও রাত (১৯:০০-০৬:০০) অনুযায়ী তাপমাত্রা ও কৃষিকাজের সুবিধা।
-* **ঘণ্টাওয়ারী গ্রাফ (Recharts 24h)**: তাপমাত্রা ও বৃষ্টির সম্ভাবনার স্পর্শকাতর গ্রাফ।
-* **৭ দিনের নির্ভুল পূর্বাভাস**: সর্বোচ্চ/সর্বনিম্ন তাপমাত্রা, বৃষ্টির সম্ভাবনা %, এবং প্রতিদিনের কৃষি ও নাগরিক গাইড।
-* **কৃষকবান্ধব আবহাওয়া ব্যাখ্যা**: ফসল শুকানো, সেচ প্রয়োগ, কীটনাশক ও সার ছিটানোর সময়োপযোগী বার্তা।
-
-### ৩. সম্পূর্ণ বাংলাদেশ মানচিত্র এক্সপ্লোরার (Leaflet Map Explorer)
-* **৮টি প্রশাসনিক বিভাগ ও ৬৪টি জেলার পূর্ণাঙ্গ ক্যাটালগ**: অক্ষাংশ ও দ্রাঘিমাংশ সহ নির্ভুল ম্যাপিং।
-* **ইন্টারেক্টিভ লিফলেট (Leaflet) ম্যাপ**: যেকোনো জেলার পিনে ক্লিক করে সরাসরি সেই জেলার আবহাওয়া ও কৃষি জোনের তথ্য দেখা যায়।
-* **যেকোনো পয়েন্টে ক্লিক**: মানচিত্রের যেকোনো স্থানে ক্লিক করলে রিভার্স জিওকোডিংয়ের মাধ্যমে নিকটতম গ্রিডের পূর্বাভাস পাওয়া যায়।
-* **ব্রাউজার জিপিএস (Browser Geolocation)**: ব্যবহারকারীর অনুমতি নিয়ে স্বয়ংক্রিয়ভাবে স্থানীয় জেলা নির্ধারণ।
-* **উপজেলা এক্সপ্লোরার**: নির্বাচিত জেলার সকল উপজেলার তালিকা ও ভৌগোলিক স্থানাঙ্ক।
-
-### ৪. বুদ্ধিমান কৃষি ও শস্য ক্যালেন্ডার (Crop Calendar & Agro-Advisory)
-* **যাচাইকৃত ১২টি প্রধান ফসল**:
-  - বোরো ধান (ব্রি ধান২৯, ব্রি ধান৮৯, ব্রি ধান৮৮, বাংলামতি)
-  - রোপা আমন ধান (ব্রি ধান৪৯, ব্রি ধান৮৭, ব্রি ধান৫১)
-  - আউশ ধান (ব্রি ধান৪৮, ব্রি ধান৯৮)
-  - গম (বারি গম-৩৩ ব্লাস্ট প্রতিরোধী, বারি গম-৩০)
-  - ভুট্টা (বারি হাইব্রিড-৯, এনকে-৪০)
-  - আলু (ডায়মন্ড, কার্ডিনাল, অ্যাস্টেরিক্স)
-  - সরিষা (বারি সরিষা-১৪, বারি সরিষা-১৮)
-  - মসুর ডাল (বারি মসুর-৮)
-  - পাট (বিজেআরআই তোষা পাট-৮ রবি-১)
-  - পেঁয়াজ (বারি পেঁয়াজ-১ তাহেরপুরী, বারি পেঁয়াজ-৪ গ্রীষ্মকালীন)
-  - কাঁচা মরিচ (বারি মরিচ-২)
-  - তরমুজ (উপকূলীয় হাইব্রিড)
-* **মৌসুম ও মাসের ফিল্টার**: বৈশাখ থেকে চৈত্র (জানুয়ারি-ডিসেম্বর) অনুযায়ী কোন ফসল বপনের উপযোগী, আসন্ন বা সময় অতিক্রান্ত তা চিহ্নিতকরণ।
-* **চাষাবাদ পদ্ধতি ও ঝুঁকি প্রতিকার**: মাটির ধরন, সেচের মাত্রা, আবহাওয়া ঝুঁকি (শৈত্যপ্রবাহ, হিট শক, নাবি ধসা, ব্লাস্ট) এবং প্রতিরোধক ব্যবস্থা।
-
-### ৫. কৃষি লাভ-ক্ষতি ও ব্যয় হিসাব ক্যালকুলেটর (Profitability Planner)
-* **স্বচ্ছ গাণিতিক সূত্র**:
-  $$\text{মোট আয়} = \text{প্রত্যাশিত ফলন (কেজি)} \times \text{কেজি প্রতি বিক্রয় দর}$$
-  $$\text{নিট লাভ} = \text{মোট আয়} - \text{মোট উৎপাদন ব্যয়}$$
-* **বাংলাদেশের প্রচলিত একক**: শতাংশ (Decimal), বিঘা (৩৩ শতাংশ), এবং একর (১০০ শতাংশ)।
-* **সম্পাদনাযোগ্য খরচ খাত**: বীজ/চারা, সার, বালাইনাশক, শ্রমিক মজুরি, সেচ ও জ্বালানি, জমি চাষ এবং পরিবহন।
-* **ব্রেক-ইভেন দর**: প্রতি কেজি এবং প্রতি মণ (৪০ কেজি) ধানে কত টাকায় বিক্রি করলে ক্ষতি হবে না।
-* **একাধিক ফসলের তুলনা (Side-by-Side Comparison)**: একই জমিতে বিভিন্ন ফসল আবাদের সম্ভাব্য লাভ-ক্ষতির তুলনা।
-
-### ৬. নিয়ামুল এআই — স্মার্ট কৃষি ও আবহাওয়া সহকারী (Niyamul AI Consultant)
-* **২৪/৭ এআই কৃষি পরামর্শক**: কৃষক ও নাগরিকদের যেকোনো প্রশ্নের তাত্ক্ষণিক বৈজ্ঞানিক সমাধান।
-* **লাইভ ওয়েদার সিঙ্ক**: নির্বাচিত জেলার বর্তমান তাপমাত্রা, আর্দ্রতা ও পূর্বাভাসের সাথে সামঞ্জস্য রেখে রিয়েল-টাইম পরামর্শ প্রদান।
-* **ডুয়াল ইঞ্জিন সাপোর্ট**: গুগল জেমিনি এআই (Gemini AI) এবং অফলাইন ইন্টেলিজেন্ট লোকাল এগ্রো-মেটিওরোলজি নলেজ ইঞ্জিন।
-* **ভাসমান কুইক অ্যাক্সেস**: যেকোনো পেজ থেকে স্ক্রিনের নিচের ফ্লোটিং বাটন চেপে সরাসরি কথা বলার সুবিধা।
-* **কৃষকবান্ধব সাজেশন চিপস**: সার প্রয়োগ, বালাই দমন, সেচ ও দুর্যোগ প্রস্তুতি বিষয়ক রেডিমেড প্রশ্ন।
-
-### ৭. বিধি-নির্ভর কৃষি সতর্কবার্তা (Rules-Based Farming Alerts)
-* পূর্বাভাস ডেটা বিশ্লেষণ করে তাৎক্ষণিক সতর্কতা:
-  - **বজ্রপাত ও কালবৈশাখী জরুরি সতর্কতা**: মাঠে কৃষক ভাইদের জীবন সুরক্ষার নির্দেশ।
-  - **ভারী বৃষ্টির সতর্কতা**: সার ছিটানো ও কীটনাশক স্প্রে সাময়িক স্থগিত রাখার পরামর্শ।
-  - **তীব্র তাপপ্রবাহ ও হিট শক**: ধানের ফুল ফোটা অবস্থায় চিটা রোধে সেচ ও রস ধরে রাখার নির্দেশনা।
-  - **কুয়াশা ও আর্দ্রতায় রোগবালাই**: আলুর নাবি ধসা (Late Blight) ও ধানের ব্লাস্ট ছত্রাকনাশক স্প্রে নির্দেশনা।
-  - **অনুকূল ফসল তোলার সময়**: পাকা ফসল কর্তন ও রোদে শুকানোর সুযোগ।
-
-### ৮. সাধারণ নাগরিক পূর্বাভাস ও লাইফস্টাইল গাইড (General Public Weather)
-* "আজ কি ছাতা লাগবে?" কার্ড
-* "রোদে কাপড় শুকাতে দেওয়া যাবে কি?"
-* যাতায়াত ও রাস্তাঘাটের অবস্থা
-* বাইরে কাজকর্ম ও তাপমাত্রার সতর্কতা।
-
-### ৯. প্রশাসন ও উপাত্তের স্বচ্ছতা (Admin & Data Sources)
-* উপাত্তের নির্ভরযোগ্য প্রতিষ্ঠান ও লাইসেন্স তালিকা (BRRI, BARI, BJRI, DAE, BAMIS, BMD, Open-Meteo CC BY 4.0)।
-* সার্ভার আপটাইম ও রিয়েল-টাইম মেট্রিক্স।
+> **"Empowering Bangladesh’s Farmers with Precision Meteorological Intelligence, Actionable Agronomic Guidance, and Financial Clarity."**
 
 ---
 
-## 🛠️ প্রযুক্তি কাঠামো (Technology Stack)
+## 📌 Executive Summary
 
-* **Frontend**: React 18, Vite, TypeScript, Tailwind CSS
-* **AI Intelligence**: Niyamul AI (Google Gemini 1.5 Flash / Pro + Smart Agro-Meteorological Rule Engine)
-* **Icons**: Lucide React
-* **Charting**: Recharts
-* **Maps**: Leaflet & OpenStreetMap Tiles
-* **Backend**: Node.js 22, Express, TypeScript (`tsx`)
-* **Caching**: In-Memory TTL Cache (`node-cache` 15 mins for weather to respect rate limits)
-* **API Providers**: Open-Meteo Weather API (Global ECMWF & GFS models)
+**Abhawa Bondhu (আবহাওয়া বন্ধু)** is an end-to-end, production-grade Agro-Meteorological & Financial Intelligence Platform tailored specifically for the 64 districts and 8 administrative divisions of Bangladesh. 
+
+Built with a **mobile-first, rural-friendly philosophy**, the platform bridges the digital divide for ordinary citizens and smallholder farmers by transforming complex satellite, numerical weather prediction (ECMWF/GFS), and agronomic research data (BRRI, BARI, BJRI, DAE) into intuitive, high-contrast, actionable guidance.
+
+The platform integrates **Niyamul AI**, an intelligent agro-meteorological consultant that dynamically ingests live localized weather data and provides instant, scientifically grounded advisory on crop management, pest mitigation, and weather-driven farming decisions.
 
 ---
 
-## 🚀 ইনস্টলেশন ও চালনা নির্দেশিকা (How to Run)
+## ✨ Key Capabilities & System Features
 
-### পূর্বশর্ত:
-* [Node.js](https://nodejs.org) (v18 বা তদূর্ধ্ব, v22 পরীক্ষিত)
-* `npm`
+### 1. 🤖 Niyamul AI — Smart 24/7 Agro-Meteorological Consultant
+* **Live Weather Context Awareness:** Automatically fetches and incorporates current local temperature, humidity, wind velocity, and rainfall forecasts into every recommendation.
+* **Dual-Engine Redundancy Architecture:** Seamlessly toggles between Google Gemini AI Pro and an internal, zero-dependency Bangladesh Agricultural Knowledge Engine—guaranteeing 100% advisory uptime even during connectivity or API quota limits.
+* **Persistent Floating Assistant & Mobile Bottom-Bar:** Instantly accessible across all devices with one tap.
+* **Curated Farmer Query Chips:** Pre-built prompts covering fertilizer scheduling, pre-monsoon pesticide timing, late blight mitigation, and heat-shock protection.
+* **One-Click Markdown Copy & Formatting:** Clear, structured advice optimized for rapid reading and field sharing.
 
-### ধাপ ১: ডিপেন্ডেন্সি ইনস্টল করুন
+### 2. 🌦️ Precision Weather Engine & 7-Day Agronomic Forecast
+* **Real-Time Satellite & Numerical Data:** Integrated with Open-Meteo API pulling global ECMWF and GFS ensembles, cached with a 15-minute in-memory TTL to eliminate rate bottlenecks.
+* **Natural Language WMO Weather Synthesis:** Direct conversion of WMO weather codes into plain-language Bengali and English explanations.
+* **Interactive 24-Hour Timeline:** Temperature trends, rain probabilities, and humidity curves visualized with Recharts.
+* **Agronomic Feasibility Scoring:** Contextual suitability metrics for grain drying, spraying, weeding, harvesting, and irrigation scheduling.
+* **General Citizen Lifestyle Cards:** Actionable guidance for daily commutes, umbrellas, outdoor labor, and laundry drying.
+
+### 3. 🗺️ Interactive Geospatial Bangladesh Map Explorer
+* **Complete Administrative Geo-Catalog:** Accurate latitude, longitude, division, and Agro-Ecological Zone (AEZ) data for all 64 districts and upazilas.
+* **Leaflet & OpenStreetMap Visualization:** Smooth panning, zooming, and interactive district pins displaying live climatic snapshots.
+* **Reverse Geocoding on Map Click:** Click anywhere on the map of Bangladesh to automatically detect the nearest meteorological grid and query real-time forecasts.
+* **Browser Geolocation:** Instant GPS location detection with one-touch browser consent.
+
+### 4. 🌾 Agronomic Crop Calendar & Variety Database
+* **12 Major Bangladesh Staples & Cash Crops:**
+  * **Rice:** Boro (*BRRI dhan29, BRRI dhan89, Banglamati*), Ropa Aman (*BRRI dhan49, BRRI dhan87*), Aus (*BRRI dhan48*).
+  * **Cereals & Tubers:** Wheat (*BARI Gom-33 blast-resistant*), Maize (*BARI Hybrid-9*), Potato (*Diamant, Cardinal, Asterix*).
+  * **Cash Crops, Pulses & Oilseeds:** Jute (*BJRI Tosha-8*), Mustard (*BARI Sarisha-14/18*), Lentils (*BARI Masur-8*), Onion, Green Chilli, Coastal Watermelon.
+* **Dynamic Sowing Windows:** Automatically classifies crops into *Active Sowing*, *Upcoming Season*, or *Past Window* based on the Bengali agro-calendar (Baishakh to Chaitra / Jan–Dec).
+* **Disease & Risk Management Profiles:** In-depth countermeasures for late blight, rice blast, cold injury, heat shock, and soil salinity.
+
+### 5. 💰 Crop Budgeting & Agricultural Profitability Planner
+* **Mathematical Formula Transparency:**
+  $$\text{Gross Revenue} = \text{Expected Yield (kg)} \times \text{Selling Price per kg}$$
+  $$\text{Net Profit} = \text{Gross Revenue} - \text{Total Production Cost}$$
+* **Local Land Measurement Units:** Native support for Decimal (শতাংশ), Bigha (৩৩ শতাংশ), and Acre (১০০ শতাংশ).
+* **Itemized Cost Modeling:** Editable inputs for seeds/seedlings, fertilizers (Urea, TSP, MoP), crop protection chemicals, manual labor, irrigation/fuel, plowing, and transport.
+* **Break-Even Analysis:** Automatic calculation of the minimum selling price per kg and per maund (৪০ কেজি) required to avoid loss.
+* **Side-by-Side Crop Comparison:** Simultaneously compare economic outcomes of multiple crops on the identical parcel of land to maximize ROI.
+
+### 6. 🚨 Rules-Based Farming Early Warning System
+* **Automated Meteorological Trigger Logic:**
+  * **Severe Nor'wester & Lightning:** Urgent life-safety and livestock sheltering alerts.
+  * **Heavy Precipitation & Waterlogging:** Warnings against fertilizer leaching and pesticide spray washouts.
+  * **Extreme Heat Stress & Heat Shock:** Critical irrigation advisories during rice anthesis and flowering stages.
+  * **Fog & Persistent Moisture:** Early fungicide warning for potato late blight and wheat blast.
+  * **Optimal Harvest Window:** Clear notifications for safe harvesting, threshing, and sun-drying.
+
+### 7. 💎 Ultra-High Readability & Universal Accessibility
+* **Bilingual Switch:** Instant toggling between native Bengali (বাংলা) and English.
+* **Tailored Bengali Typography:** Loaded with Google Fonts `Hind Siliguri` and `Noto Sans Bengali` for crisp rendering across entry-level Android devices.
+* **Ultra-Bold Tabular Numerals:** Temperature values displayed in massive `text-7xl` to `text-9xl font-black`, and monetary figures in `text-4xl` to `text-5xl` high-contrast tabular figures (`৳`) for effortless field legibility.
+
+---
+
+## 🏛️ System Architecture
+
+```mermaid
+graph TD
+    A[Client - React 18 + Vite + Tailwind] -->|HTTP / REST| B[Node.js + Express API Server]
+    
+    subgraph Frontend Client
+        A --> C[Niyamul AI Floating Widget & Full View]
+        A --> D[Weather Dashboard & Recharts 24h]
+        A --> E[Leaflet Geospatial 64-District Map]
+        A --> F[Crop Calendar & Recommendation Matrix]
+        A --> G[Crop Profitability & Comparison Calculator]
+    end
+
+    subgraph Backend Services
+        B --> H[AI Service: Gemini Pro + Local Agro Engine]
+        B --> I[Weather Service: Open-Meteo Integration + 15m Cache]
+        B --> J[Advisory Engine: Rules-Based Warning Generator]
+        B --> K[Crop Database: 12 Verified Varieties & AEZ Data]
+        B --> L[Profit Calculator Service: Multi-Unit Economics]
+        B --> M[Geospatial Service: 64 Districts & Upazilas]
+    end
+
+    subgraph External Providers
+        I -->|Global Weather API| N[Open-Meteo ECMWF / GFS]
+        H -->|Generative AI API| O[Google Gemini 1.5 Flash / Pro]
+    end
+```
+
+---
+
+## 🛠️ Technology Stack
+
+| Layer | Technologies |
+|---|---|
+| **Frontend Framework** | React 18, Vite 5, TypeScript |
+| **Styling & Design System** | Tailwind CSS 3.4, PostCSS, Lucide React Icons |
+| **Data Visualization** | Recharts (Responsive 24h temperature & precipitation curves) |
+| **Geospatial & Mapping** | Leaflet, React-Leaflet, OpenStreetMap Tiles |
+| **Typography** | Hind Siliguri, Noto Sans Bengali, Outfit, Inter |
+| **Backend Framework** | Node.js 22, Express.js 4, TypeScript via `tsx` |
+| **AI & LLM Services** | Google Gemini API (1.5 Flash/Pro) + Fallback Agronomic Rule Engine |
+| **Performance & Caching** | In-Memory TTL Cache (`node-cache`) |
+| **External Weather API** | Open-Meteo Weather Forecast API (ECMWF & GFS global models) |
+
+---
+
+## 📡 REST API Reference
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/api/health` | System health check, uptime, and metadata |
+| `GET` | `/api/locations/divisions` | Retrieve all 8 administrative divisions of Bangladesh |
+| `GET` | `/api/locations/districts` | Full catalog of 64 districts with coordinates and AEZ zones |
+| `GET` | `/api/locations/upazilas?districtId={id}` | List upazilas for a given district |
+| `GET` | `/api/locations/search?q={query}` | Global search across divisions, districts, and upazilas |
+| `GET` | `/api/locations/reverse?lat={lat}&lon={lon}` | Nearest district and upazila lookup from GPS coordinates |
+| `GET` | `/api/weather?lat={lat}&lon={lon}` | Real-time weather, 24-hour hourly curve, and 7-day forecast |
+| `GET` | `/api/crops` | Retrieve verified database of 12 agricultural crops |
+| `GET` | `/api/crops/recommendations?districtId={id}&month={m}` | Agro-ecological zone & month-based crop suitability scoring |
+| `POST` | `/api/profitability/calculate` | Compute input costs, yield value, break-even price, and net profit |
+| `POST` | `/api/profitability/compare` | Multi-crop comparative economic analysis for a given land parcel |
+| `POST` | `/api/ai/chat` | **Niyamul AI** context-aware agronomic and weather chat endpoint |
+| `GET` | `/api/advisories/active?lat={lat}&lon={lon}` | Meteorological rules-based active farming alerts |
+| `GET` | `/api/admin/stats` | Server operational metrics, dataset counts, and cache status |
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+* **Node.js**: v18.x or higher (v22.x recommended)
+* **npm**: v9.x or higher
+
+### 1. Clone the Repository
 ```bash
-# রুট ডিরেক্টরিতে ডিপেন্ডেন্সি ইনস্টল করুন
+git clone https://github.com/Niyamul-04/smart-farmer.git
+cd smart-farmer
+```
+
+### 2. Install Dependencies
+```bash
+# Install root, server, and client dependencies concurrently
 npm run install:all
 ```
-অথবা আলাদাভাবে:
+*Or install separately:*
 ```bash
 cd server && npm install
 cd ../client && npm install
+cd ..
 ```
 
-### ধাপ ২: ব্যাকএন্ড ও ফ্রন্টএন্ড চালনা করুন
-টার্মিনালে ব্যাকএন্ড সার্ভার চালু করুন (Port 5000):
+### 3. Configure Environment Variables (Optional)
+Copy the example environment file:
+```bash
+cp .env.example .env
+```
+To enable Google Gemini AI generation in Niyamul AI, add your API key in `server/.env`:
+```env
+PORT=5000
+NODE_ENV=development
+GEMINI_API_KEY=your_gemini_api_key_here
+```
+*(Note: If no API key is provided, Niyamul AI automatically falls back to the embedded Agricultural Rule Engine seamlessly).*
+
+### 4. Run the Development Environment
+Start the backend server (Port 5000):
 ```bash
 cd server
 npm run dev
 ```
 
-আরেকটি টার্মিনালে ক্লায়েন্ট ফ্রন্টএন্ড চালু করুন (Port 3000):
+In a separate terminal, launch the frontend client (Port 3000):
 ```bash
 cd client
 npm run dev
 ```
 
-ব্রাউজারে যান: `http://localhost:3000`
+Open your browser and navigate to:
+```
+http://localhost:3000
+```
+
+### 5. Production Build
+```bash
+# Build the React client bundle
+cd client
+npm run build
+```
 
 ---
 
-## 📡 এপিআই এন্ডপয়েন্টসমূহ (API Endpoints)
+## 🌾 Data Governance & Institutional Acknowledgements
 
-| Method | Endpoint | Description |
-|---|---|---|
-| `GET` | `/api/health` | সিস্টেম স্বাস্থ্য ও মেটাডাটা |
-| `GET` | `/api/locations/divisions` | বাংলাদেশের ৮টি প্রশাসনিক বিভাগ |
-| `GET` | `/api/locations/districts` | ৬৪টি জেলার তালিকা, ভৌগোলিক স্থানাঙ্ক ও কৃষি অঞ্চল |
-| `GET` | `/api/locations/upazilas?districtId=...` | নির্বাচিত জেলার সকল উপজেলা |
-| `GET` | `/api/locations/search?q=...` | বিভাগ, জেলা ও উপজেলার সরাসরি অনুসন্ধান |
-| `GET` | `/api/locations/reverse?lat=...&lon=...` | জিপিএস স্থানাঙ্কের নিকটতম জেলা ও উপজেলা |
-| `GET` | `/api/weather?lat=...&lon=...` | ওপেন-মেটিও লাইভ আবহাওয়া, ২৪ ঘণ্টার ঘণ্টাওয়ারী ও ৭ দিনের পূর্বাভাস |
-| `GET` | `/api/crops` | ১২টি প্রধান ফসলের পূর্ণাঙ্গ বৈজ্ঞানিক উপাত্ত |
-| `GET` | `/api/crops/recommendations?districtId=...&month=...` | কৃষি অঞ্চল ও মাস ভিত্তিক ফসলের উপযুক্ততা স্কোরিং |
-| `POST` | `/api/profitability/calculate` | একক ফসলের উৎপাদন খরচ, ফলন ও নিট লাভ হিসাব |
-| `POST` | `/api/profitability/compare` | একই জমির জন্য একাধিক ফসলের তুলনামূলক বিশ্লেষণ |
-| `POST` | `/api/ai/chat` | নিয়ামুল এআই (Niyamul AI) স্মার্ট এগ্রো-মেটিওরোলজিক্যাল চ্যাট কনসালট্যান্ট |
-| `GET` | `/api/advisories/active?lat=...&lon=...` | পূর্বাভাস ডেটা-ভিত্তিক কৃষকের সক্রিয় সতর্কবার্তা |
-| `GET` | `/api/admin/stats` | সার্ভার মেট্রিক্স ও প্রাতিষ্ঠানিক ডেটাসেট পরিসংখ্যান |
+1. **Weather Forecasting Data:** Powered by [Open-Meteo](https://open-meteo.com/) under Creative Commons Attribution 4.0 International (CC BY 4.0) using global models from ECMWF and GFS.
+2. **Agronomic Data Benchmarks:** Crop growth periods, recommended varieties, and management practices are synthesized from official publications of:
+   * **BRRI** (Bangladesh Rice Research Institute)
+   * **BARI** (Bangladesh Agricultural Research Institute)
+   * **BJRI** (Bangladesh Jute Research Institute)
+   * **DAE** (Department of Agricultural Extension)
+   * **BMD** (Bangladesh Meteorological Department)
+3. **Emergency Weather Disclaimers:** In events of severe cyclones, tidal surges, or sudden flash floods, citizens and farmers are advised to cross-reference official warnings broadcast by the Bangladesh Meteorological Department and the Ministry of Disaster Management and Relief.
 
 ---
 
-## 📋 উপাত্তের নির্ভরযোগ্যতা ও সীমাবদ্ধতা (Data Sources & Disclaimers)
+## 👨‍💻 Project Lead & Author
 
-1. **আবহাওয়ার পূর্বাভাস**: আবহাওয়ার পূর্বাভাস গাণিতিক ও আবহাওয়া উপগ্রহ ভিত্তিক সম্ভাব্যতা মডেল। স্থানীয় ভূপ্রকৃতি ও নদীর প্রভাবে স্থানীয় সামান্য তারতম্য হতে পারে।
-2. **জরুরি দুর্যোগকালীন সতর্কতা**: ঘূর্ণিঝড়, জলোচ্ছ্বাস বা আকস্মিক বন্যার ক্ষেত্রে সর্বদা বাংলাদেশ আবহাওয়া অধিদপ্তর (BMD) ও সরকারের দুর্যোগ ব্যবস্থাপনা মন্ত্রণালয়ের অফিসিয়াল বিশেষ বুলেটিন অনুসরণ করতে হবে।
-3. **লাভ-ক্ষতির হিসাব**: প্রদত্ত ব্যয় ও বিক্রির হার কৃষি সম্প্রসারণ অধিদপ্তর ও মাঠ পর্যায়ের গড় মানের ওপর ভিত্তি করে তৈরি। সার, বীজ ও শ্রমিকের স্থানীয় বাজারদরের পার্থক্যের কারণে কৃষক তার নিজস্ব বাস্তব খরচ ইনপুটে বসিয়ে নিখুঁত হিসাব বের করতে পারবেন।
+* **Developer:** **Niyamul Hasan**
+* **GitHub:** [@Niyamul-04](https://github.com/Niyamul-04)
+* **Email:** niyamulhasan301@gmail.com
+* **Repository:** [https://github.com/Niyamul-04/smart-farmer](https://github.com/Niyamul-04/smart-farmer)
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
