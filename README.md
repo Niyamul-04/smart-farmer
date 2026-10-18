@@ -9,6 +9,8 @@
 [![AI Powered](https://img.shields.io/badge/AI_Engine-Gemini_Pro_%2B_Local_Agro_Rules-FF6F00?style=flat-square&logo=google&logoColor=white)](https://ai.google.dev/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/Niyamul-04/smart-farmer)
+
 > **"Empowering Bangladesh’s Farmers with Precision Meteorological Intelligence, Actionable Agronomic Guidance, and Financial Clarity."**
 
 ---

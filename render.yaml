@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: smart-farmer
+    env: node
+    plan: free
+    buildCommand: npm run install:all && npm run build --prefix client
+    startCommand: npm run start --prefix server
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
